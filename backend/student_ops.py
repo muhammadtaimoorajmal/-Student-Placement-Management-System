@@ -52,7 +52,8 @@ def apply_for_job(student_id, job_id):
     if not conn: return False
     try:
         cursor = conn.cursor()
-        app_id = f"A{student_id}{job_id}"  # Simple ID generation
+        # Generate a unique application ID within 20 chars
+        app_id = f"A{cursor.callfunc('sys_guid', str)}"[:20]
         cursor.execute("INSERT INTO APPLICATION (application_id, student_id, job_id, status) VALUES (:app_id, :sid, :jid, 'Pending')", {"app_id": app_id, "sid": student_id, "jid": job_id})
         conn.commit()
         cursor.close()

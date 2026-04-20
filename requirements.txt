@@ -1,7 +1,6 @@
 oracledb
-customtkinter
+flask
 matplotlib
 pandas
 reportlab
-pillow
 openpyxl

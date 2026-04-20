@@ -53,7 +53,10 @@ def post_new_job(company_id, title, description, req_cgpa, location, deadline):
         cursor = conn.cursor()
         # Simple ID generation: J + timestamp
         job_id = f"J{company_id}{cursor.callfunc('sys_guid', str)}"[:20]
-        cursor.execute("INSERT INTO JOB (job_id, company_id, job_title, description, required_cgpa, location, deadline_date) VALUES (:jid, :cid, :title, :desc, :cgpa, :loc, :deadline)", {"jid": job_id, "cid": company_id, "title": title, "desc": description, "cgpa": req_cgpa, "loc": location, "deadline": deadline})
+        cursor.execute("""
+            INSERT INTO JOB (job_id, company_id, job_title, description, required_cgpa, location, deadline_date) 
+            VALUES (:jid, :cid, :title, :job_desc, :cgpa, :loc, TO_DATE(:deadline, 'YYYY-MM-DD'))
+        """, {"jid": job_id, "cid": company_id, "title": title, "job_desc": description, "cgpa": req_cgpa, "loc": location, "deadline": deadline})
         conn.commit()
         cursor.close()
         conn.close()

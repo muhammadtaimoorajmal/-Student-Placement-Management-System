@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Placement Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- LOGIN SECTION -->
+        <section id="login-section" class="auth-section">
+            <div class="auth-card">
+                <h1>Welcome Back</h1>
+                <p>Login to the Placement Portal</p>
+                
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role">
+                        <option value="student">Student</option>
+                        <option value="company">Company</option>
+                        <option value="tpo">TPO</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="text" id="userId" placeholder="Enter your ID (e.g. S001)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                
+                <button class="btn" onclick="login()">Login</button>
+                <p id="login-error" style="color: var(--danger); margin-top: 10px; display: none;">Invalid credentials</p>
+            </div>
+        </section>
+
+        <!-- STUDENT DASHBOARD -->
+        <section id="student-dashboard" class="dashboard-section hidden">
+            <header class="dashboard-header">
+                <h2>Student Portal</h2>
+                <div class="nav-links">
+                    <button class="active" onclick="switchTab('student', 'profile')">Profile</button>
+                    <button onclick="switchTab('student', 'jobs')">Available Jobs</button>
+                    <button onclick="switchTab('student', 'apps')">My Applications</button>
+                    <button onclick="logout()" style="color: var(--danger)">Logout</button>
+                </div>
+            </header>
+            <div class="dashboard-content">
+                <div id="student-profile" class="info-card">
+                    <h3>My Profile</h3>
+                    <div id="student-profile-content" class="grid-2" style="margin-top: 15px;">
+                        <!-- JS injects profile here -->
+                    </div>
+                </div>
+                
+                <div id="student-jobs" class="info-card hidden">
+                    <h3>Available Jobs</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Job Title</th>
+                                <th>Location</th>
+                                <th>Req CGPA</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-jobs-list"></tbody>
+                    </table>
+                </div>
+
+                <div id="student-apps" class="info-card hidden">
+                    <h3>My Applications</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Job Title</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-apps-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPANY DASHBOARD -->
+        <section id="company-dashboard" class="dashboard-section hidden">
+            <header class="dashboard-header">
+                <h2>Company Portal</h2>
+                <div class="nav-links">
+                    <button class="active" onclick="switchTab('company', 'profile')">Profile</button>
+                    <button onclick="switchTab('company', 'jobs')">My Jobs</button>
+                    <button onclick="switchTab('company', 'applicants')">Applicants</button>
+                    <button onclick="logout()" style="color: var(--danger)">Logout</button>
+                </div>
+            </header>
+            <div class="dashboard-content">
+                <div id="company-profile" class="info-card">
+                    <h3>Company Details</h3>
+                    <div id="company-profile-content" class="grid-2" style="margin-top: 15px;"></div>
+                </div>
+
+                <div id="company-jobs" class="info-card hidden">
+                    <h3>Posted Jobs</h3>
+                    <button class="btn" style="width: auto; margin-bottom: 15px;" onclick="document.getElementById('post-job-form').classList.toggle('hidden')">+ Post New Job</button>
+                    
+                    <div id="post-job-form" class="hidden" style="margin-bottom: 20px; padding: 20px; border: 1px dashed #ccc; border-radius: 8px;">
+                        <div class="grid-2">
+                            <div class="form-group"><label>Title</label><input type="text" id="job-title"></div>
+                            <div class="form-group"><label>Location</label><input type="text" id="job-location"></div>
+                            <div class="form-group"><label>Required CGPA</label><input type="number" step="0.01" id="job-cgpa"></div>
+                            <div class="form-group"><label>Deadline (YYYY-MM-DD)</label><input type="date" id="job-deadline"></div>
+                            <div class="form-group" style="grid-column: span 2;"><label>Description</label><input type="text" id="job-desc"></div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="postJob()">Submit Job</button>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Location</th>
+                                <th>Req CGPA</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="company-jobs-list"></tbody>
+                    </table>
+                </div>
+
+                <div id="company-applicants" class="info-card hidden">
+                    <h3>Applicants</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Job Title</th>
+                                <th>CGPA</th>
+                                <th>Current Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="company-applicants-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TPO DASHBOARD -->
+        <section id="tpo-dashboard" class="dashboard-section hidden">
+            <header class="dashboard-header">
+                <h2>TPO Portal</h2>
+                <div class="nav-links">
+                    <button class="active" onclick="switchTab('tpo', 'students')">Students</button>
+                    <button onclick="switchTab('tpo', 'companies')">Companies</button>
+                    <button onclick="switchTab('tpo', 'jobs')">Jobs</button>
+                    <button onclick="switchTab('tpo', 'apps')">Applications</button>
+                    <button onclick="switchTab('tpo', 'reports')">Reports</button>
+                    <button onclick="logout()" style="color: var(--danger)">Logout</button>
+                </div>
+            </header>
+            <div class="dashboard-content">
+                <div id="tpo-students" class="info-card">
+                    <h3>All Students</h3>
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>CGPA</th></tr></thead>
+                        <tbody id="tpo-students-list"></tbody>
+                    </table>
+                </div>
+                
+                <div id="tpo-companies" class="info-card hidden">
+                    <h3>All Companies</h3>
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Name</th><th>Industry</th><th>Verified</th><th>Action</th></tr></thead>
+                        <tbody id="tpo-companies-list"></tbody>
+                    </table>
+                </div>
+
+                <div id="tpo-jobs" class="info-card hidden">
+                    <h3>All Jobs</h3>
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Title</th><th>Company</th><th>Location</th></tr></thead>
+                        <tbody id="tpo-jobs-list"></tbody>
+                    </table>
+                </div>
+
+                <div id="tpo-apps" class="info-card hidden">
+                    <h3>All Applications</h3>
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Student</th><th>Job</th><th>Status</th></tr></thead>
+                        <tbody id="tpo-apps-list"></tbody>
+                    </table>
+                </div>
+
+                <div id="tpo-reports" class="info-card hidden">
+                    <h3>System Reports & Analytics</h3>
+                    <div class="grid-2">
+                        <div style="background: #F3F4F6; padding: 15px; border-radius: 8px;">
+                            <h4>Company Engagement</h4>
+                            <table class="data-table" style="font-size: 12px;">
+                                <thead><tr><th>Company</th><th>Jobs</th></tr></thead>
+                                <tbody id="report-companies-list"></tbody>
+                            </table>
+                        </div>
+                        <div style="background: #F3F4F6; padding: 15px; border-radius: 8px;">
+                            <h4>Application Status</h4>
+                            <table class="data-table" style="font-size: 12px;">
+                                <thead><tr><th>Status</th><th>Count</th></tr></thead>
+                                <tbody id="report-apps-list"></tbody>
+                            </table>
+                        </div>
+                        <div style="background: #F3F4F6; padding: 15px; border-radius: 8px; grid-column: span 2;">
+                            <h4>Department Statistics</h4>
+                            <table class="data-table" style="font-size: 12px;">
+                                <thead><tr><th>Department</th><th>Placed</th><th>Avg Package (LPA)</th></tr></thead>
+                                <tbody id="report-depts-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
