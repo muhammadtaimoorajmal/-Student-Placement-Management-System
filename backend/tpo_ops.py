@@ -20,7 +20,7 @@ def get_all_students():
     if not conn: return []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT student_id, name, email, department, cgpa FROM STUDENT ORDER BY student_id")
+        cursor.execute("SELECT * FROM STUDENT ORDER BY student_id")
         columns = [col[0] for col in cursor.description]
         data = cursor.fetchall()
         cursor.close()
@@ -35,7 +35,7 @@ def get_all_companies():
     if not conn: return []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT company_id, company_name, industry, email, tpo_verified FROM COMPANY ORDER BY company_name")
+        cursor.execute("SELECT * FROM COMPANY ORDER BY company_name")
         columns = [col[0] for col in cursor.description]
         data = cursor.fetchall()
         cursor.close()
@@ -50,7 +50,7 @@ def get_all_jobs():
     if not conn: return []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT j.job_id, j.job_title, c.company_name, j.location, j.is_active FROM JOB j JOIN COMPANY c ON j.company_id = c.company_id ORDER BY j.job_id")
+        cursor.execute("SELECT j.*, c.company_name FROM JOB j JOIN COMPANY c ON j.company_id = c.company_id ORDER BY j.job_id")
         columns = [col[0] for col in cursor.description]
         data = cursor.fetchall()
         cursor.close()
@@ -65,7 +65,7 @@ def get_all_applications():
     if not conn: return []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT a.application_id, s.name AS student_name, j.job_title, a.status FROM APPLICATION a JOIN STUDENT s ON a.student_id = s.student_id JOIN JOB j ON a.job_id = j.job_id ORDER BY a.application_id")
+        cursor.execute("SELECT a.*, s.name AS student_name, s.cgpa AS student_cgpa, j.job_title, c.company_name FROM APPLICATION a JOIN STUDENT s ON a.student_id = s.student_id JOIN JOB j ON a.job_id = j.job_id JOIN COMPANY c ON j.company_id = c.company_id ORDER BY a.application_id")
         columns = [col[0] for col in cursor.description]
         data = cursor.fetchall()
         cursor.close()

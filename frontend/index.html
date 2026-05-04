@@ -171,7 +171,7 @@
                 <div id="tpo-students" class="info-card">
                     <h3>All Students</h3>
                     <table class="data-table">
-                        <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>CGPA</th></tr></thead>
+                        <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>CGPA</th><th>Action</th></tr></thead>
                         <tbody id="tpo-students-list"></tbody>
                     </table>
                 </div>
@@ -229,6 +229,15 @@
             </div>
         </section>
 
+    </div>
+
+    <!-- MODAL -->
+    <div id="data-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title">Details</h3>
+            <div id="modal-body" class="grid-2" style="margin-top: 15px;"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
